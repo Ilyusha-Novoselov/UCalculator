@@ -2,6 +2,8 @@
 #define ACONTROL_H
 
 #include <string>
+#include "TANumber.h"
+#include "history.h"
 
 namespace UCalculator {
 enum State_control {

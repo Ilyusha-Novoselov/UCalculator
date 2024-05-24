@@ -21,6 +21,7 @@ INCLUDEPATH += \
     LineEdit \
     MainWindow \
     Memory \
+    History \
     Processor \
     TANumber \
     TANumber/CNumber \
@@ -53,6 +54,7 @@ HEADERS += \
     AEditor/PEditor/peditor.h \
     Converter/converter_10_p.h \
     Converter/converter_p_10.h \
+    History/history.h \
     LineEdit/input_line_edit.h \
     MainWindow/mainwindow.h \
     Memory/memory.h \

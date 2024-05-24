@@ -37,11 +37,99 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboBox->addItem("P-ые числа");
     ui->comboBox->addItem("Дробные числа");
     ui->comboBox->addItem("Комплексные числа");
+
+    ui->tableWidget->setColumnCount(5);
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableWidget->setHorizontalHeaderLabels({"Lop", "Op", "Rop", "Result", "P"});
+    ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    QString htmlText = R"(
+        <html>
+            <body style='white-space: pre; font-family: "Courier New", Courier, monospace; font-size: 12pt;'>
+<b>Калькулятор p1 p2:</b>
+
+<b>Функции кнопок:</b>
+-[0-F] Ввод в нужной с.сч.
+-BS удалить символ справа
+-CE очистить поле редактора
+-. разделитель
+-= вычислить результат
+"+-*/" арифметические операции
+"^2" возведение в квадрат
+"1/x" найти обратное число
+"+/-" сменить знак числа
+
+<b>Функция ползунка:</b>
+-Выбор с.сч. от 2 до 16
+
+<b>Клавиатура:</b>
+-Доступен ввод для символов
+[0-F] и [.]
+-BS удалить символ справа
+-DEL очистить поле ввода
+
+<b>История:</b>
+-Lop - левый операнд
+-Op - операция
+-Rop - правый операнд
+-Result - результат операции
+-P - система счисления
+            </body>
+        </html>)";
+    ui->textEdit->setHtml(htmlText);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::addHistory()
+{
+    if(ui->comboBox->currentText() == "P-ые числа")
+    {
+        auto history = _control_p->get_history();
+        if(!history.empty())
+        {
+            int rowCount = ui->tableWidget->rowCount();
+            ui->tableWidget->insertRow(rowCount);
+            ui->tableWidget->setItem(rowCount, 0, new QTableWidgetItem(QString::fromStdString(history.rbegin()->lop.GetNumber())));
+            ui->tableWidget->setItem(rowCount, 1, new QTableWidgetItem(QString::fromStdString(history.rbegin()->operation)));
+            ui->tableWidget->setItem(rowCount, 2, new QTableWidgetItem(QString::fromStdString(history.rbegin()->rop.GetNumber())));
+            ui->tableWidget->setItem(rowCount, 3, new QTableWidgetItem(QString::fromStdString(history.rbegin()->result.GetNumber())));
+            ui->tableWidget->setItem(rowCount, 4, new QTableWidgetItem(QString::number(history.rbegin()->p)));
+        }
+    }
+
+    if(ui->comboBox->currentText() == "Дробные числа")
+    {
+        auto history = _control_f->get_history();
+        if(!history.empty())
+        {
+            int rowCount = ui->tableWidget->rowCount();
+            ui->tableWidget->insertRow(rowCount);
+            ui->tableWidget->setItem(rowCount, 0, new QTableWidgetItem(QString::fromStdString(history.rbegin()->lop.GetNumber())));
+            ui->tableWidget->setItem(rowCount, 1, new QTableWidgetItem(QString::fromStdString(history.rbegin()->operation)));
+            ui->tableWidget->setItem(rowCount, 2, new QTableWidgetItem(QString::fromStdString(history.rbegin()->rop.GetNumber())));
+            ui->tableWidget->setItem(rowCount, 3, new QTableWidgetItem(QString::fromStdString(history.rbegin()->result.GetNumber())));
+            ui->tableWidget->setItem(rowCount, 4, new QTableWidgetItem(QString::number(history.rbegin()->p)));
+        }
+    }
+
+    if(ui->comboBox->currentText() == "Комплексные числа")
+    {
+        auto history = _control_c->get_history();
+        if(!history.empty())
+        {
+            int rowCount = ui->tableWidget->rowCount();
+            ui->tableWidget->insertRow(rowCount);
+            ui->tableWidget->setItem(rowCount, 0, new QTableWidgetItem(QString::fromStdString(history.rbegin()->lop.GetNumber())));
+            ui->tableWidget->setItem(rowCount, 1, new QTableWidgetItem(QString::fromStdString(history.rbegin()->operation)));
+            ui->tableWidget->setItem(rowCount, 2, new QTableWidgetItem(QString::fromStdString(history.rbegin()->rop.GetNumber())));
+            ui->tableWidget->setItem(rowCount, 3, new QTableWidgetItem(QString::fromStdString(history.rbegin()->result.GetNumber())));
+            ui->tableWidget->setItem(rowCount, 4, new QTableWidgetItem(QString::number(history.rbegin()->p)));
+        }
+    }
 }
 
 void MainWindow::removeAllUpToOperator(QString &str)
@@ -282,6 +370,7 @@ void MainWindow::DoButtonCommand(QString &command)
             {
                 ui->lineEdit_2->setText("0" + command);
                 _control->DoProcessorCommand(processorMap[command.toStdString()]); // Устанавливаем нужную операцию
+                addHistory();
                 return;
             }
 
@@ -303,6 +392,7 @@ void MainWindow::DoButtonCommand(QString &command)
                 _control->set_state(UCalculator::cOpDone);
             }
         }
+        addHistory();
         return;
     }
     }

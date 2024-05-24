@@ -23,6 +23,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void addHistory();
+
     void removeAllUpToOperator(QString& str);
 
 public slots:

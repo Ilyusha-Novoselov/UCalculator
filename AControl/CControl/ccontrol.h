@@ -5,6 +5,7 @@
 #include "ceditor.h"
 #include "processor.h"
 #include "memory.h"
+#include "history.h"
 
 namespace UCalculator {
 
@@ -12,7 +13,7 @@ template<class T>
 class CControl: public AControl {
 public:
     // Конструктор
-    CControl(): _editor(new СEditor()), _processor(new Processor<T>()), _memory(new Memory<T>), _state(cStart), _p(10) {};
+    CControl(): _editor(new СEditor()), _processor(new Processor<T>()), _memory(new Memory<T>), _history(new History<T>), _state(cStart), _p(10) {};
 
     // Деструктор
     ~CControl() {
@@ -67,6 +68,17 @@ public:
             edit = "0";
         else
             edit = _editor->getNumber();
+
+        Record<T> t;
+        std::string temp_op;
+        auto op = _processor->getOperation();
+        switch (op) {
+        case None: break;
+        case Add: temp_op = "+"; break;
+        case Sub: temp_op = "-"; break;
+        case Mul: temp_op = "*"; break;
+        case Dvd: temp_op = "/"; break;
+        }
 
         T number(edit, _p);
         std::string str;
@@ -135,7 +147,15 @@ public:
             return;
 
         case 10:
+            t.lop = *_processor->getLop().Copy();
+            t.operation = temp_op;
+            t.rop = *_processor->getRop().Copy();
+
             _processor->executeOperation();
+
+            t.result = *_processor->getLop().Copy();
+            t.p = _p;
+            _history->AddRecord(t.lop, t.operation, t.rop, t.result, t.p);
 
             // Полученный результат записываем в редактор
             str = _processor->getLop().GetNumber();
@@ -221,6 +241,9 @@ public:
     // Получить систему счисления
     virtual uint8_t get_p() override { return _p; }
 
+    // Получить историю
+    inline std::vector<Record<T>> get_history() { return _history->get_allRecord(); };
+
 private:
     // Редактор
     СEditor* _editor;
@@ -230,6 +253,9 @@ private:
 
     // Память
     Memory<T>* _memory;
+
+    // История
+    History<T>* _history;
 
     // Состояние
     State_control _state = cStart;
