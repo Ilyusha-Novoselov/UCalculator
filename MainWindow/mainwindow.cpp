@@ -88,6 +88,7 @@ void MainWindow::onButtonClicked()
 
 void MainWindow::DoButtonCommand(QString &command)
 {
+    try{
     //------------------------------------------------------------------//
     // Не реагировать, если кнопка не активна
     //------------------------------------------------------------------//
@@ -110,6 +111,29 @@ void MainWindow::DoButtonCommand(QString &command)
         ui->Button_Madd->setEnabled(false);
         _cOpDone = false;
         _temp = "";
+        return;
+    }
+
+    //------------------------------------------------------------------//
+    // Вызов функций комплексного числа
+    //------------------------------------------------------------------//
+    if(command == "Mdl" || command == "Phi")
+    {
+        auto num = _control->DoEditorCommand(20);
+
+        UCalculator::CNumber number(num, _control->get_p());
+
+        if(command == "Mdl")
+        {
+            auto z = number.Modulus();
+            ui->lineEdit_2->setText(QString::fromStdString(z.GetNumber()));
+        }
+
+        if(command == "Phi")
+        {
+            auto z = number.Argument();
+            ui->lineEdit_2->setText(QString::fromStdString(z.GetNumber()));
+        }
         return;
     }
 
@@ -280,6 +304,11 @@ void MainWindow::DoButtonCommand(QString &command)
             }
         }
         return;
+    }
+    }
+    catch(...)
+    {
+        QMessageBox::warning(nullptr, "Предупреждение", "Ошибка ввода!");
     }
 }
 
