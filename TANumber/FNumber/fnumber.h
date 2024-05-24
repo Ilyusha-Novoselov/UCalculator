@@ -70,17 +70,6 @@ public:
         PNumber denominatorResult = _b * other._b; // b * d
 
         std::string resultNumber = numeratorResult.GetNumber() + "|" + denominatorResult.GetNumber();
-        size_t delimiterPos = resultNumber.find('|');
-        if(delimiterPos != std::string::npos)
-        {
-            if(resultNumber[delimiterPos + 1] == '-')
-            {
-                resultNumber.erase(delimiterPos + 1, 1);
-                resultNumber.insert(0, "-");
-            }
-        }
-
-
         FNumber* result = new FNumber(resultNumber, _p);
 
         result->Reduce();
@@ -102,15 +91,6 @@ public:
 
         // Создаем новый объект FNumber для результата
         std::string resultNumber = numeratorResult.GetNumber() + "|" + denominatorResult.GetNumber();
-        size_t delimiterPos = resultNumber.find('|');
-        if(delimiterPos != std::string::npos)
-        {
-            if(resultNumber[delimiterPos + 1] == '-')
-            {
-                resultNumber.erase(delimiterPos + 1, 1);
-                resultNumber.insert(0, "-");
-            }
-        }
         FNumber* result = new FNumber(resultNumber, _p);
 
         result->Reduce();
@@ -130,15 +110,6 @@ public:
 
         // Создаем новый объект FNumber для результата
         std::string resultNumber = numeratorResult.GetNumber() + "|" + denominatorResult.GetNumber();
-        size_t delimiterPos = resultNumber.find('|');
-        if(delimiterPos != std::string::npos)
-        {
-            if(resultNumber[delimiterPos + 1] == '-')
-            {
-                resultNumber.erase(delimiterPos + 1, 1);
-                resultNumber.insert(0, "-");
-            }
-        }
         FNumber* result = new FNumber(resultNumber, _p);
 
         result->Reduce();
@@ -158,15 +129,6 @@ public:
 
         // Создаем новый объект FNumber для результата
         std::string resultNumber = numeratorResult.GetNumber() + "|" + denominatorResult.GetNumber();
-        size_t delimiterPos = resultNumber.find('|');
-        if(delimiterPos != std::string::npos)
-        {
-            if(resultNumber[delimiterPos + 1] == '-')
-            {
-                resultNumber.erase(delimiterPos + 1, 1);
-                resultNumber.insert(0, "-");
-            }
-        }
         FNumber* result = new FNumber(resultNumber, _p);
 
         result->Reduce();
@@ -274,8 +236,24 @@ public:
             _b.turnTo(_p);
         }
 
+        auto a = _a.GetNumber();
+        auto b = _b.GetNumber();
+        if(b[0] == '-')
+        {
+            if(a[0] == '-')
+            {
+                a.erase(0,1);
+                b.erase(0,1);
+            }
+            else
+            {
+                b.erase(0,1);
+                a.insert(0, "-");
+            }
+        }
+
         // Обновляем строку дроби
-        _number = _a.GetNumber() + "|" + _b.GetNumber();
+        _number = a + "|" + b;
     }
 
 
