@@ -12,7 +12,7 @@ template<class T>
 class PControl: public AControl {
 public:
     // Конструктор
-    PControl(): _editor(new PEditor()), _processor(new Processor<T>()), _memory(new Memory<T>) {};
+    PControl(): _editor(new PEditor()), _processor(new Processor<T>()), _memory(new Memory<T>), _state(cStart), _p(10) {};
 
     // Деструктор
     ~PControl() {
@@ -209,6 +209,18 @@ public:
         _state = cStart;
     };
 
+    // Получить состояние
+    virtual State_control get_state() override { return _state; }
+
+    // Установить состояние
+    virtual void set_state(State_control state) override { _state = state; }
+
+    // Установить систему счисления
+    virtual void set_p(uint8_t p) override { _p = p; }
+
+    // Получить систему счисления
+    virtual uint8_t get_p() override { return _p; }
+
 private:
     // Редактор
     PEditor* _editor;
@@ -218,6 +230,12 @@ private:
 
     // Память
     Memory<T>* _memory;
+
+    // Состояние
+    State_control _state = cStart;
+
+    // Система счисления
+    uint8_t _p;
 };
 
 }

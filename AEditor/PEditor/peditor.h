@@ -1,5 +1,5 @@
-#ifndef EDITOR_H_
-#define EDITOR_H_
+#ifndef PEDITOR_H_
+#define PEDITOR_H_
 
 #include "AEditor.h"
 

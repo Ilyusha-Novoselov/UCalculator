@@ -46,24 +46,16 @@ public:
     virtual void DoReset(bool flag = false) = 0;
 
     // Получить состояние
-    virtual State_control get_state() { return _state; }
+    virtual State_control get_state() = 0;
 
     // Установить состояние
-    virtual void set_state(State_control state) { _state = state; }
+    virtual void set_state(State_control state) = 0;
 
     // Установить систему счисления
-    virtual void set_p(uint8_t p) { _p = p; }
+    virtual void set_p(uint8_t p) = 0;
 
     // Получить систему счисления
-    virtual uint8_t get_p() { return _p; }
-
-protected:
-    // Состояние
-    State_control _state = cStart;
-
-    // Система счисления
-    uint8_t _p;
-
+    virtual uint8_t get_p() = 0;
 };
 }
 

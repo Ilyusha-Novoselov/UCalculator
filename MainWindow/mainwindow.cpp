@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     _control_p = new UCalculator::PControl<UCalculator::PNumber>;
+    _control_f = new UCalculator::FControl<UCalculator::FNumber>;
 
     _control = _control_p;
 
@@ -178,7 +179,7 @@ void MainWindow::DoButtonCommand(QString &command)
     // Вызов команды редактора
     //------------------------------------------------------------------//
     static QRegularExpression editorCommand("^[0-9A-F.]|Backspace|CE|\\+/-$");
-    if(editorCommand.match(command).hasMatch())
+    if(editorCommand.match(command).hasMatch() || command == "|")
     {
         // Очищаем, если выражение было вычислено
         if(_control->get_state() == UCalculator::cExpDone)
@@ -329,6 +330,53 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
             else
                 button->setEnabled(true);
         }
+    }
+}
+
+
+void MainWindow::on_comboBox_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == "P-ые числа")
+    {
+        _control->DoReset(true);
+        _control = _control_p;
+        ui->Button_dot->setEnabled(true);
+        ui->Button_frac->setEnabled(false);
+        ui->Button_im->setEnabled(false);
+        ui->Button_mdl->setEnabled(false);
+        ui->Button_phi->setEnabled(false);
+        _temp = "";
+        _cOpDone = false;
+        ui->horizontalSlider->setValue(10);
+        ui->horizontalSlider->setValue(10);
+        ui->lineEdit->setText("");
+        ui->lineEdit_2->setText("");
+    }
+
+    if(arg1 == "Дробные числа")
+    {
+        _control->DoReset(true);
+        _control = _control_f;
+        ui->Button_dot->setEnabled(false);
+        ui->Button_frac->setEnabled(true);
+        ui->Button_im->setEnabled(false);
+        ui->Button_mdl->setEnabled(false);
+        ui->Button_phi->setEnabled(false);
+        _temp = "";
+        _cOpDone = false;
+        ui->horizontalSlider->setValue(10);
+        ui->horizontalSlider->setValue(10);
+        ui->lineEdit->setText("");
+        ui->lineEdit_2->setText("");
+    }
+
+    if(arg1 == "Комплексные числа")
+    {
+        ui->Button_dot->setEnabled(false);
+        ui->Button_frac->setEnabled(false);
+        ui->Button_im->setEnabled(true);
+        ui->Button_mdl->setEnabled(true);
+        ui->Button_phi->setEnabled(true);
     }
 }
 
