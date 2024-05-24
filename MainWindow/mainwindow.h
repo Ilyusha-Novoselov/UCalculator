@@ -3,7 +3,10 @@
 
 #include <QMainWindow>
 
-#include "control.h"
+#include "pnumber.h"
+#include "pcontrol.h"
+#include "fcontrol.h"
+#include "ccontrol.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,7 +32,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    UCalculator::Control<UCalculator::PNumber>* _control;
+    UCalculator::AControl* _control;
+    UCalculator::PControl<UCalculator::PNumber>* _control_p;
     QString _temp; // Хранит заменяемый правый операнд для смены в отображении цельного выражения
     bool _cOpDone = false; // Флаг для показа, введена операция или нет
 

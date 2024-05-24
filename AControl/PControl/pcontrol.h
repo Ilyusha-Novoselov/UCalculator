@@ -1,52 +1,28 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
-#include "pnumber.h"
-#include "editor.h"
+#include "AControl.h"
+#include "peditor.h"
 #include "processor.h"
 #include "memory.h"
 
 namespace UCalculator {
-enum State_control {
-    // Начальное состояние
-    cStart,
 
-    // Ввод и редактирование
-    cEditing,
-
-    // Функция вычислена
-    FunDone,
-
-    // Функция для одного операнда выполнена
-    FuncOneDone,
-
-    // Выполнена команда памяти
-    cMemDone,
-
-    // Выражение вычислено
-    cExpDone,
-
-    // Операция выполнена
-    cOpDone,
-
-    // Ошибка
-    cError
-};
 template<class T>
-class Control {
+class PControl: public AControl {
 public:
     // Конструктор
-    Control(): _editor(new Editor()), _processor(new Processor<PNumber>()), _memory(new Memory<PNumber>), _state(cStart) {};
+    PControl(): _editor(new PEditor()), _processor(new Processor<T>()), _memory(new Memory<T>) {};
 
     // Деструктор
-    ~Control() {
+    ~PControl() {
         delete _editor;
         delete _processor;
         delete _memory;
     }
 
     // Выполнить команду редактора (0 - 20)
-    std::string DoEditorCommand(int command)
+    virtual std::string DoEditorCommand(int command) override
     {
         _state = cEditing;
 
@@ -84,7 +60,7 @@ public:
     };
 
     // Выполнить команду процессора (0 - 11)
-    void DoProcessorCommand(int command)
+    virtual void DoProcessorCommand(int command) override
     {
         std::string edit;
         if(_editor->getNumber().empty())
@@ -171,7 +147,7 @@ public:
             _state = cExpDone;
             return;
 
-        // Смена системы счисления процессора
+            // Смена системы счисления процессора
         case 11:
             number = *_processor->getLop().Copy();
             number.turnTo(_p);
@@ -187,10 +163,10 @@ public:
             _editor->setNumber(str);
             return;
         }
-    }
+    };
 
     // Выполнить команду памяти
-    T DoMemoryCommand(int command)
+    virtual uint8_t DoMemoryCommand(int command) override
     {
         T number(_editor->getNumber(), _p);
         std::string str = _memory->get_number().GetNumber();
@@ -199,57 +175,49 @@ public:
         {
         case 1:
             _memory->store(number);
-            return _memory->get_number();
+            return _p;
 
         case 2:
             if(_p != _memory->get_number().get_p())
+            {
                 DoReset();
+                _p = _memory->get_number().get_p();
+            }
             _editor->setNumber(str);
-            return _memory->get_number();
+            return _p;
 
         case 3:
             _memory->add(number);
-            return _memory->get_number();
+            return _p;
 
         case 4:
             _memory->clear();
-            return _memory->get_number();
+            return _p;
 
         default:
-            return _memory->get_number();
+            return _p;
         }
     };
 
     // Сброс
-    void DoReset(bool flag = false) { _editor->Clear(); _processor->reset(); if(flag) _memory->clear(); _state = cStart; }
-
-    // Получить состояние
-    State_control get_state() { return _state; }
-
-    // Установить состояние
-    void set_state(State_control state) { _state = state; }
-
-    // Установить систему счисления
-    void set_p(uint8_t p) { _p = p; }
-
-    // Получить систему счисления
-    uint8_t get_p() { return _p; }
+    virtual void DoReset(bool flag = false) override
+    {
+        _editor->Clear();
+        _processor->reset();
+        if(flag)
+            _memory->clear();
+        _state = cStart;
+    };
 
 private:
     // Редактор
-    Editor* _editor;
+    PEditor* _editor;
 
     // Процессор
     Processor<T>* _processor;
 
     // Память
     Memory<T>* _memory;
-
-    // Состояние
-    State_control _state;
-
-    // Система счисления
-    uint8_t _p;
 };
 
 }

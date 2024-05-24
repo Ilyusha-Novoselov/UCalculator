@@ -6,7 +6,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    _control = new UCalculator::Control<UCalculator::PNumber>;
+    _control_p = new UCalculator::PControl<UCalculator::PNumber>;
+
+    _control = _control_p;
+
     ui->lineEdit->setFocus(Qt::OtherFocusReason);
 
     // Привязываем сигналы кнопок к одному слоту
@@ -109,13 +112,12 @@ void MainWindow::DoButtonCommand(QString &command)
         }
 
         auto mem = _control->DoMemoryCommand(memoryMap[command.toStdString()]);
-        if(command == "MR" && _control->get_p() != mem.get_p())
+        if(command == "MR" && mem != _control->get_p())
         {
-            _control->set_p(mem.get_p());
             ui->lineEdit_2->setText("");
-            ui->lineEdit->setText(QString::fromStdString(mem.GetNumber()));
+            ui->lineEdit->setText(QString::fromStdString(_control->DoEditorCommand(20)));
             _control->set_state(UCalculator::cMemDone);
-            ui->horizontalSlider->setValue(mem.get_p());
+            ui->horizontalSlider->setValue(mem);
             _control->set_state(UCalculator::cEditing);
             return;
         }
