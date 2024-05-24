@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     _control_p = new UCalculator::PControl<UCalculator::PNumber>;
     _control_f = new UCalculator::FControl<UCalculator::FNumber>;
+    _control_c = new UCalculator::CControl<UCalculator::CNumber>;
 
     _control = _control_p;
 
@@ -45,18 +46,38 @@ MainWindow::~MainWindow()
 
 void MainWindow::removeAllUpToOperator(QString &str)
 {
-    if(str[0] == '-')
-        str.remove(0,1);
-    // Найти позицию первого вхождения одного из символов +, -, *, /
-    static QRegularExpression reg("[+\\-*/]");
-    int pos = str.indexOf(reg);
+    if(ui->comboBox->currentText() == "Комплексные числа")
+    {
+        // Находим позицию первого слагаемого
+        static QRegularExpression reg("[+-]");
+        int first_plus_index = str.indexOf(reg, 1);
 
-    // Если найдено вхождение, удалить все символы до этой позиции
-    if (pos != -1)
-        str = str.mid(pos);
+        // Если нашли знак, находим следующий знак (после первого слагаемого)
+        if (first_plus_index != -1) {
+            int second_plus_index = str.indexOf(reg, first_plus_index + 1);
+            if (second_plus_index != -1) {
+                if(str[second_plus_index - 1] == '*')
+                    second_plus_index = str.indexOf(reg, second_plus_index + 1);;
+                // Удаляем первое слагаемое
+                str.remove(0, second_plus_index);
+            }
+        }
+    }
     else
-        // Если ни один из символов не найден, очистить строку
-        str.clear();
+    {
+        if(str[0] == '-')
+            str.remove(0,1);
+        // Найти позицию первого вхождения одного из символов +, -, *, /
+        static QRegularExpression reg("[+\\-*/]");
+        int pos = str.indexOf(reg);
+
+        // Если найдено вхождение, удалить все символы до этой позиции
+        if (pos != -1)
+            str = str.mid(pos);
+        else
+            // Если ни один из символов не найден, очистить строку
+            str.clear();
+    }
 }
 
 void MainWindow::onButtonClicked()
@@ -179,7 +200,7 @@ void MainWindow::DoButtonCommand(QString &command)
     // Вызов команды редактора
     //------------------------------------------------------------------//
     static QRegularExpression editorCommand("^[0-9A-F.]|Backspace|CE|\\+/-$");
-    if(editorCommand.match(command).hasMatch() || command == "|")
+    if(editorCommand.match(command).hasMatch() || command == "|" || command == "i*")
     {
         // Очищаем, если выражение было вычислено
         if(_control->get_state() == UCalculator::cExpDone)
@@ -286,17 +307,65 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
         QString str_1 = ui->lineEdit_2->text();
         if(str_1[0] == '-')
             subString_1 = "-" + subString_1;
-        UCalculator::PNumber lop(subString_1.toStdString(), _control->get_p());
-        UCalculator::PNumber rop(subString_2.toStdString(), _control->get_p());
-        UCalculator::PNumber result(ui->lineEdit->text().toStdString(), _control->get_p());
 
-        result.turnTo(value);
-        rop.turnTo(value);
-        lop.turnTo(value);
-        _temp = QString::fromStdString(rop.GetNumber());
+        if(ui->comboBox->currentText() == "P-ые числа")
+        {
+            UCalculator::PNumber lop(subString_1.toStdString(), _control->get_p());
+            UCalculator::PNumber rop(subString_2.toStdString(), _control->get_p());
+            UCalculator::PNumber result(ui->lineEdit->text().toStdString(), _control->get_p());
 
-        ui->lineEdit_2->setText(QString::fromStdString(lop.GetNumber()) + str[pos] + QString::fromStdString(rop.GetNumber()) + "=");
-        ui->lineEdit->setText(QString::fromStdString(result.GetNumber()));
+            result.turnTo(value);
+            rop.turnTo(value);
+            lop.turnTo(value);
+            _temp = QString::fromStdString(rop.GetNumber());
+
+            ui->lineEdit_2->setText(QString::fromStdString(lop.GetNumber()) + str[pos] + QString::fromStdString(rop.GetNumber()) + "=");
+            ui->lineEdit->setText(QString::fromStdString(result.GetNumber()));
+        }
+        if(ui->comboBox->currentText() == "Дробные числа")
+        {
+            UCalculator::FNumber lop(subString_1.toStdString(), _control->get_p());
+            UCalculator::FNumber rop(subString_2.toStdString(), _control->get_p());
+            UCalculator::FNumber result(ui->lineEdit->text().toStdString(), _control->get_p());
+
+            result.turnTo(value);
+            rop.turnTo(value);
+            lop.turnTo(value);
+            _temp = QString::fromStdString(rop.GetNumber());
+
+            ui->lineEdit_2->setText(QString::fromStdString(lop.GetNumber()) + str[pos] + QString::fromStdString(rop.GetNumber()) + "=");
+            ui->lineEdit->setText(QString::fromStdString(result.GetNumber()));
+        }
+        if(ui->comboBox->currentText() == "Комплексные числа")
+        {
+            // Находим позицию первого слагаемого
+            static QRegularExpression reg("[+-]");
+            int first_plus_index = str.indexOf(reg, 1);
+
+            // Если нашли знак, находим следующий знак (после первого слагаемого)
+            if (first_plus_index != -1) {
+                int second_plus_index = str.indexOf(reg, first_plus_index + 1);
+                if (second_plus_index != -1) {
+                    if(str[second_plus_index - 1] == '*')
+                        second_plus_index = str.indexOf(reg, second_plus_index + 1);;
+                    subString_1 = str.mid(0, second_plus_index);
+                    subString_2 = str.mid(second_plus_index + 1, str.length() - second_plus_index);
+                }
+            }
+
+            UCalculator::CNumber lop(subString_1.toStdString(), _control->get_p());
+            UCalculator::CNumber rop(subString_2.toStdString(), _control->get_p());
+            UCalculator::CNumber result(ui->lineEdit->text().toStdString(), _control->get_p());
+
+            result.turnTo(value);
+            rop.turnTo(value);
+            lop.turnTo(value);
+            _temp = QString::fromStdString(rop.GetNumber());
+
+            ui->lineEdit_2->setText(QString::fromStdString(lop.GetNumber()) + str[pos] + QString::fromStdString(rop.GetNumber()) + "=");
+            ui->lineEdit->setText(QString::fromStdString(result.GetNumber()));
+        }
+
 
         // Смена в процессоре
         _control->set_p(value);
@@ -372,11 +441,19 @@ void MainWindow::on_comboBox_currentTextChanged(const QString &arg1)
 
     if(arg1 == "Комплексные числа")
     {
+        _control->DoReset(true);
+        _control = _control_c;
         ui->Button_dot->setEnabled(false);
         ui->Button_frac->setEnabled(false);
         ui->Button_im->setEnabled(true);
         ui->Button_mdl->setEnabled(true);
         ui->Button_phi->setEnabled(true);
+        _temp = "";
+        _cOpDone = false;
+        ui->horizontalSlider->setValue(10);
+        ui->horizontalSlider->setValue(10);
+        ui->lineEdit->setText("");
+        ui->lineEdit_2->setText("");
     }
 }
 

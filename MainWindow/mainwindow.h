@@ -5,6 +5,7 @@
 
 #include "pnumber.h"
 #include "fnumber.h"
+#include "cnumber.h"
 #include "pcontrol.h"
 #include "fcontrol.h"
 #include "ccontrol.h"
@@ -38,12 +39,13 @@ private:
     UCalculator::AControl* _control;
     UCalculator::PControl<UCalculator::PNumber>* _control_p;
     UCalculator::FControl<UCalculator::FNumber>* _control_f;
+    UCalculator::CControl<UCalculator::CNumber>* _control_c;
     QString _temp; // Хранит заменяемый правый операнд для смены в отображении цельного выражения
     bool _cOpDone = false; // Флаг для показа, введена операция или нет
 
     static inline std::map<std::string, int> editorMap = {
         {"0", 0}, {".", 16}, {"Backspace", 17}, {"CE", 18}, {"+/-", 19},
-        {"|", 16}
+        {"|", 16}, {"i*", 16}
     };
 
     static inline std::map<std::string, int> processorMap = {

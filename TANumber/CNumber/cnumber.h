@@ -19,11 +19,20 @@ public:
         // Найти позицию знака '*'
         size_t star_pos = number.find('*', i_pos);
 
-        // Извлечь действительную часть (от начала строки до знака 'i')
-        _a.SetNumber(number.substr(0, i_pos));
-
-        // Извлечь мнимую часть (от знака '*' до конца строки)
-        _b.SetNumber(number.substr(star_pos + 1));
+        if(i_pos != std::string::npos)
+        {
+            // Извлечь действительную часть (от начала строки до знака 'i')
+            _a.SetNumber(number.substr(0, i_pos));
+            _a.set_p(p);
+            // Извлечь мнимую часть (от знака '*' до конца строки)
+            _b.SetNumber(number.substr(star_pos + 1));
+            _b.set_p(p);
+        }
+        else
+        {
+            _a.SetNumber(number);
+            _a.set_p(p);
+        }
     };
 
     // Конструктор копирования

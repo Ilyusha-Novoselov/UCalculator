@@ -11,7 +11,7 @@ namespace UCalculator {
 class FNumber: public TANumber {
 public:
     // Конструкторы
-    FNumber() : _number("0|1"), _a(), _b("1", 10), _p(10) {};
+    FNumber() : _a(), _b("1", 10), _p(10) {};
 
     FNumber(const std::string& number, uint8_t p) {
         _number = number;
@@ -23,12 +23,16 @@ public:
             _a.set_p(p);
 
             _b.SetNumber(number.substr(delimiterPos + 1));
+            if(number.substr(delimiterPos + 1) == "0")
+                _b.SetNumber("1");
             _b.set_p(p);
         }
         else
         {
             _a.SetNumber(number);
+            _b.SetNumber("1");
             _a.set_p(p);
+            _b.set_p(p);
         }
     };
 
