@@ -69,8 +69,18 @@ public:
         PNumber numeratorResult = numerator1 + numerator2; // a * d + b * c
         PNumber denominatorResult = _b * other._b; // b * d
 
-        // Создаем новый объект FNumber для результата
         std::string resultNumber = numeratorResult.GetNumber() + "|" + denominatorResult.GetNumber();
+        size_t delimiterPos = resultNumber.find('|');
+        if(delimiterPos != std::string::npos)
+        {
+            if(resultNumber[delimiterPos + 1] == '-')
+            {
+                resultNumber.erase(delimiterPos + 1, 1);
+                resultNumber.insert(0, "-");
+            }
+        }
+
+
         FNumber* result = new FNumber(resultNumber, _p);
 
         result->Reduce();
@@ -92,6 +102,15 @@ public:
 
         // Создаем новый объект FNumber для результата
         std::string resultNumber = numeratorResult.GetNumber() + "|" + denominatorResult.GetNumber();
+        size_t delimiterPos = resultNumber.find('|');
+        if(delimiterPos != std::string::npos)
+        {
+            if(resultNumber[delimiterPos + 1] == '-')
+            {
+                resultNumber.erase(delimiterPos + 1, 1);
+                resultNumber.insert(0, "-");
+            }
+        }
         FNumber* result = new FNumber(resultNumber, _p);
 
         result->Reduce();
@@ -111,6 +130,15 @@ public:
 
         // Создаем новый объект FNumber для результата
         std::string resultNumber = numeratorResult.GetNumber() + "|" + denominatorResult.GetNumber();
+        size_t delimiterPos = resultNumber.find('|');
+        if(delimiterPos != std::string::npos)
+        {
+            if(resultNumber[delimiterPos + 1] == '-')
+            {
+                resultNumber.erase(delimiterPos + 1, 1);
+                resultNumber.insert(0, "-");
+            }
+        }
         FNumber* result = new FNumber(resultNumber, _p);
 
         result->Reduce();
@@ -130,6 +158,15 @@ public:
 
         // Создаем новый объект FNumber для результата
         std::string resultNumber = numeratorResult.GetNumber() + "|" + denominatorResult.GetNumber();
+        size_t delimiterPos = resultNumber.find('|');
+        if(delimiterPos != std::string::npos)
+        {
+            if(resultNumber[delimiterPos + 1] == '-')
+            {
+                resultNumber.erase(delimiterPos + 1, 1);
+                resultNumber.insert(0, "-");
+            }
+        }
         FNumber* result = new FNumber(resultNumber, _p);
 
         result->Reduce();
