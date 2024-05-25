@@ -157,6 +157,7 @@ QComboBox {
     border: 1px solid rgba(255, 255, 255, 40);
     border-radius: 5px;
     padding: 5px;
+    padding-right: 20px; /* Ensure there is space for the arrow */
 }
 
 QComboBox:hover {
@@ -166,16 +167,20 @@ QComboBox:hover {
 QComboBox::drop-down {
     subcontrol-origin: padding;
     subcontrol-position: top right;
-    width: 15px;
+    width: 20px;
     border-left-width: 1px;
     border-left-color: rgba(255, 255, 255, 40);
     border-left-style: solid;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
+    background-color: rgba(255, 255, 255, 30); /* Match the main background */
 }
 
 QComboBox::down-arrow {
-    image: url(down_arrow.png); /* Provide a path to your down arrow image */
+    width: 12px; 
+    height: 12px; 
+    border-radius: 6px; 
+    background-color: white;
 }
 
 QComboBox QAbstractItemView {

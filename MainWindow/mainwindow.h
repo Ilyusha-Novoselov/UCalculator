@@ -29,10 +29,15 @@ public slots:
 
     void DoButtonCommand(QString& command);
 
+signals:
+    void set_focus(bool focus);
+
 private slots:
     void on_horizontalSlider_valueChanged(int value);
 
     void on_comboBox_currentTextChanged(const QString &arg1);
+
+    void on_tabWidget_currentChanged(int index);
 
 private:
     Ui::MainWindow *ui;

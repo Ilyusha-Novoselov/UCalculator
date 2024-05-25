@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
         connect(button, SIGNAL(clicked()), this, SLOT(onButtonClicked()));
 
     connect(ui->lineEdit, &InputLineEdit::onKeyClicked, this, &MainWindow::DoButtonCommand);
-    //connect(this, &MainWindow::set_focus, ui->lineEdit, &InputLineEdit::set_focus);
+    connect(this, &MainWindow::set_focus, ui->lineEdit, &InputLineEdit::set_focus);
 
     ui->horizontalSlider->setRange(2, 16);
     ui->horizontalSlider->setSingleStep(1);
@@ -363,6 +363,7 @@ void MainWindow::DoButtonCommand(QString &command)
                 ui->lineEdit->setText(QString::fromStdString(_control->DoEditorCommand(20)));
                 _control->set_state(UCalculator::cExpDone);
             }
+            addHistory();
         }
         else
         {
@@ -370,7 +371,6 @@ void MainWindow::DoButtonCommand(QString &command)
             {
                 ui->lineEdit_2->setText("0" + command);
                 _control->DoProcessorCommand(processorMap[command.toStdString()]); // Устанавливаем нужную операцию
-                addHistory();
                 return;
             }
 
@@ -392,7 +392,6 @@ void MainWindow::DoButtonCommand(QString &command)
                 _control->set_state(UCalculator::cOpDone);
             }
         }
-        addHistory();
         return;
     }
     }
@@ -574,5 +573,14 @@ void MainWindow::on_comboBox_currentTextChanged(const QString &arg1)
         ui->lineEdit->setText("");
         ui->lineEdit_2->setText("");
     }
+}
+
+
+void MainWindow::on_tabWidget_currentChanged(int index)
+{
+    if(index == 0)
+        emit set_focus(true);
+    else
+        emit set_focus(false);
 }
 
