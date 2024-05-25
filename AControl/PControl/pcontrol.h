@@ -3,17 +3,17 @@
 
 #include "AControl.h"
 #include "peditor.h"
+#include "pnumber.h"
 #include "processor.h"
 #include "memory.h"
 #include "history.h"
 
 namespace UCalculator {
 
-template<class T>
 class PControl: public AControl {
 public:
     // Конструктор
-    PControl(): _editor(new PEditor()), _processor(new Processor<T>()), _memory(new Memory<T>),_history(new History<T>), _state(cStart), _p(10) {};
+    PControl(): _editor(new PEditor()), _processor(new Processor<PNumber>()), _memory(new Memory<PNumber>),_history(new History<PNumber>), _state(cStart), _p(10) {};
 
     // Деструктор
     ~PControl() {
@@ -69,7 +69,7 @@ public:
         else
             edit = _editor->getNumber();
 
-        Record<T> t;
+        Record<PNumber> t;
         std::string temp_op;
         auto op = _processor->getOperation();
         switch (op) {
@@ -80,7 +80,7 @@ public:
         case Dvd: temp_op = "/"; break;
         }
 
-        T number(edit, _p);
+        PNumber number(edit, _p);
         std::string str;
         switch(command)
         {
@@ -188,7 +188,7 @@ public:
     // Выполнить команду памяти
     virtual uint8_t DoMemoryCommand(int command) override
     {
-        T number(_editor->getNumber(), _p);
+        PNumber number(_editor->getNumber(), _p);
         std::string str = _memory->get_number().GetNumber();
         _state = cMemDone;
         switch(command)
@@ -242,20 +242,20 @@ public:
     virtual uint8_t get_p() override { return _p; }
 
     // Получить историю
-    inline std::vector<Record<T>> get_history() { return _history->get_allRecord(); };
+    inline std::vector<Record<PNumber>> get_history() { return _history->get_allRecord(); };
 
 private:
     // Редактор
     PEditor* _editor;
 
     // Процессор
-    Processor<T>* _processor;
+    Processor<PNumber>* _processor;
 
     // Память
-    Memory<T>* _memory;
+    Memory<PNumber>* _memory;
 
     // История
-    History<T>* _history;
+    History<PNumber>* _history;
 
     // Состояние
     State_control _state = cStart;

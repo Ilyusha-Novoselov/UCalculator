@@ -6,9 +6,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    _control_p = new UCalculator::PControl<UCalculator::PNumber>;
-    _control_f = new UCalculator::FControl<UCalculator::FNumber>;
-    _control_c = new UCalculator::CControl<UCalculator::CNumber>;
+    _control_p = new UCalculator::PControl;
+    _control_f = new UCalculator::FControl;
+    _control_c = new UCalculator::CControl;
 
     _control = _control_p;
 
