@@ -14,16 +14,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_PREFIX_PATH $ENV{QTDIR})
 
-if(NOT DEFINED ENV{QTDIR})
-    message(FATAL_ERROR "Environment variable QTDIR is not set. Please set it to the Qt6 installation path.")
-else()
-    set(CMAKE_PREFIX_PATH $ENV{QTDIR})
-endif()
-
-if (MSVC)
-        add_compile_options(/Zc:__cplusplus)
-endif()
-
 find_package(Qt6Core REQUIRED)
 find_package(Qt6Widgets REQUIRED)
 
@@ -46,14 +36,12 @@ file(GLOB_RECURSE SOURCES
 # Add the forms directory to the AUTOUIC search paths
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
 
-# Add the executable
 if (WIN32) 
     add_executable(UCalculator WIN32 ${SOURCES})
 elseif(UNIX)
     add_executable(UCalculator ${SOURCES})
 endif()
 
-# Add the target includes for MY_PROJECT 
 target_include_directories(UCalculator PRIVATE ${FORMS_DIR})
 target_include_directories(UCalculator PRIVATE ${INCLUDE_DIR})
 target_include_directories(UCalculator PRIVATE ${SOURCE_DIR})
