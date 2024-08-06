@@ -7,6 +7,8 @@ namespace UCalculator {
 class TANumber
 {
 public:
+    virtual ~TANumber() = default;
+
     // Получить число
     virtual std::string GetNumber(void) const = 0;
 

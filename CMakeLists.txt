@@ -18,33 +18,44 @@ find_package(Qt6Core REQUIRED)
 find_package(Qt6Widgets REQUIRED)
 
 #=================== INCLUSION OF Project Files ====================#
-set(FORMS_DIR "${CMAKE_SOURCE_DIR}/form")
-set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
-set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
-
-include_directories(${FORMS_DIR})
-include_directories(${INCLUDE_DIR})
-include_directories(${SOURCE_DIR})
-
-file(GLOB_RECURSE SOURCES
-    "${FORMS_DIR}/*.ui"
-    "${INCLUDE_DIR}/*.h"
-    "${SOURCE_DIR}/*.cpp"
+set(SOURCE_DIRS
+    "App"
+    "Control"
+    "Converter"
+    "Editor"
+    "Form"
+    "History"
+    "Memory"
+    "Number"
+    "Processor"
 )
+
+set(FORMS_DIR "${CMAKE_SOURCE_DIR}/Form")
+
+include_directories(${SOURCE_DIRS})
+
+set(ALL_FILES)
+
+foreach(SOURCE_DIR ${SOURCE_DIRS})
+    file(GLOB_RECURSE FILES
+        "${SOURCE_DIR}/*.cpp"
+        "${SOURCE_DIR}/*.h"
+        "${SOURCE_DIR}/*.ui"
+    )
+    list(APPEND ALL_FILES ${FILES})
+endforeach()
 
 #=================== SETUP EXECTUABLE ====================#
 # Add the forms directory to the AUTOUIC search paths
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
 
 if (WIN32) 
-    add_executable(UCalculator WIN32 ${SOURCES})
+    add_executable(UCalculator WIN32 ${ALL_FILES})
 elseif(UNIX)
-    add_executable(UCalculator ${SOURCES})
+    add_executable(UCalculator ${ALL_FILES})
 endif()
 
-target_include_directories(UCalculator PRIVATE ${FORMS_DIR})
-target_include_directories(UCalculator PRIVATE ${INCLUDE_DIR})
-target_include_directories(UCalculator PRIVATE ${SOURCE_DIR})
+target_include_directories(UCalculator PRIVATE ${SOURCE_DIRS})
 
 #===================== LINKING LIBRARIES =======================#
 target_link_libraries(UCalculator Qt6::Widgets)

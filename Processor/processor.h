@@ -1,9 +1,6 @@
 #ifndef PROCESSOR_H
 #define PROCESSOR_H
 
-#include <string>
-#include <map>
-
 namespace UCalculator {
 enum Operation {
     None, Add, Sub, Mul, Dvd
@@ -20,10 +17,10 @@ public:
     Processor() : _lop_Res(), _rop(), _operation(None) {};
 
     // Сброс процессора
-    void reset() { _lop_Res.reset(); _rop.reset(); _operation = None; };
+    inline void reset() { _lop_Res.reset(); _rop.reset(); _operation = None; };
 
     // Сброс операции
-    void resetOperation() { _operation = None; };
+    inline void resetOperation() { _operation = None; };
 
     // Выполнить операцию
     void executeOperation() {
@@ -78,28 +75,28 @@ public:
     };
 
     // Получить левый операнд
-    T getLop() { return _lop_Res; };
+    inline T getLop() { return _lop_Res; };
 
     // Установить левый операнд
-    void setLop(T& lop) { _lop_Res = lop; };
+    inline void setLop(T& lop) { _lop_Res = lop; };
 
     // Получить правый операнд
-    T getRop() { return _rop; };
+    inline T getRop() { return _rop; };
 
     // Установить правый операнд
-    void setRop(T& rop) { _rop = rop; };
+    inline void setRop(T& rop) { _rop = rop; };
 
     // Получить резерв
-    T getTemp() { return _temp; };
+    inline T getTemp() { return _temp; };
 
     // Установить резерв
-    void setTemp(T& temp) { _temp = temp; };
+    inline void setTemp(T& temp) { _temp = temp; };
 
     // Получить состояние
-    Operation getOperation() { return _operation; };
+    inline Operation getOperation() { return _operation; };
 
     // Установить состояние
-    void setOperation(const Operation& operation) { _operation = operation; };
+    inline void setOperation(const Operation& operation) { _operation = operation; };
 
 private:
     // Левый операнд

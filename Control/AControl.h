@@ -35,6 +35,8 @@ enum State_control {
 class AControl
 {
 public:
+    virtual ~AControl() = default;
+
     // Выполнить команду редактора (0 - 20)
     virtual std::string DoEditorCommand(int command) = 0;
 

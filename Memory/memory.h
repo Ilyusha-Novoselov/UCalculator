@@ -16,22 +16,22 @@ namespace UCalculator {
         Memory() : _number(), _state() {};
 
         // Записать (MS)
-        void store(T& number) { _number = number; _state = On; };
+        inline void store(T& number) { _number = number; _state = On; };
 
         // Получить число (MR)
-        T get_number() { return _number; _state = On;};
+        inline T get_number() { return _number; _state = On;};
 
         // Очистить (т.е. вернуть к начальному состоянию) (MC)
-        void clear() { _number.reset(); _state = Off; };
+        inline void clear() { _number.reset(); _state = Off; };
 
         // Добавить (MA)
-        void add(T& number) { if(_number.get_p() == number.get_p()) _number = _number + number; };
+        inline void add(T& number) { if(_number.get_p() == number.get_p()) _number = _number + number; };
 
         // Получить состояние
-        State get_state() { return _state; };
+        inline State get_state() { return _state; };
 
         // Установить состояние
-        void set_state(State state) { _state = state; };
+        inline void set_state(State state) { _state = state; };
 
         static inline std::map<std::string, int> commandMap = {
             {"MS", 1}, {"MR", 2}, {"M+", 3}, {"MC", 4}
