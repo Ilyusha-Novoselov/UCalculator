@@ -23,14 +23,14 @@ set(SOURCE_DIRS
     "Control"
     "Converter"
     "Editor"
-    "Form"
+    "Forms"
     "History"
     "Memory"
     "Number"
     "Processor"
 )
 
-set(FORMS_DIR "${CMAKE_SOURCE_DIR}/Form")
+set(FORMS_DIR "${CMAKE_SOURCE_DIR}/Forms")
 
 include_directories(${SOURCE_DIRS})
 
